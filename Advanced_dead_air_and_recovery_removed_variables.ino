@@ -31,19 +31,7 @@ static uint32_t timer;
 unsigned int error = 0;
 unsigned int pingError;
 static uint32_t failTimer;
-//unsigned long oldMillis;
-//const long flashInterval = 1000; //flash interval in mS
-//unsigned long flashTimer;
-//unsigned long RXTimer;
-//unsigned long TXTimer;
-//boolean led;
 const unsigned int audioThreshold = 2; // Dead air detector threshold
-//unsigned long RXaudioValue;
-//unsigned long TXaudioValue;
-//unsigned long RXAverage;
-//unsigned long TXAverage;
-//boolean internet = true;
-//const int ledPin = 3;
 boolean RXresetFlag = 0;
 int pingLoop;
 boolean giveUp;
@@ -65,7 +53,7 @@ void setup() {
   timer = -9999999; // these are the ping return timers
   failTimer = -9999999;
   pinMode (networkRSTPin, OUTPUT);// extra pin to reset the ENC28J60 ethernet interface
-  pinMode (rstPin, OUTPUT);
+  pinMode (rstPin, INPUT);
   dhcpLease(); // get an IP address
   delay (180000); //  wait for 3 minutes to allow the Pi's to start up
 }
@@ -83,7 +71,7 @@ void loop() {
       digitalWrite (ledPin, LOW); // error LED off
       Serial.print (F("."));
       delay (250);
-      digitalWrite (lampPin, LOW); //VU lamps on
+      digitalWrite (lampPin, LOW);  //VU lamps on
       digitalWrite (ledPin, HIGH); // error LED on
       delay (250);
       Serial.print (F("."));
@@ -99,6 +87,7 @@ void loop() {
     error_output();
     Serial.println(F("Rebooting monitor"));
     delay (1000);
+    pinMode (rstPin, OUTPUT);
     digitalWrite(rstPin, LOW); //reset the arduino, restarting everything.
     //nothing ever gets here
   }
